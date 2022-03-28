@@ -1,5 +1,6 @@
 import React from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { ThemeProvider, createTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -30,7 +31,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 700,
+    minWidth: 700,    
   },
   firstCellContainer: {
     display: 'flex',
@@ -40,12 +41,25 @@ const useStyles = makeStyles({
   },
   firstCell: {
     paddingRight:'50px',
+  }, tbody: {
+    backgroundColor:'black'
   }
+  
 });
+
+const darkTheme = createTheme({
+    palette: {
+        primary: {
+            main:'#fff',
+        }, type: 'dark',
+    }
+})
 
 export default function CustomizedTables({tableData,setTable,symbol}) {
   const classes = useStyles();
   const change = tableData.price_change_percentage_24h;
+  const marketCap = tableData.market_cap;
+  console.log(marketCap);
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="customized table">
@@ -58,7 +72,8 @@ export default function CustomizedTables({tableData,setTable,symbol}) {
             
           </TableRow>
         </TableHead>
-        <TableBody>
+        <ThemeProvider theme={darkTheme}>
+          <TableBody className={classes.tbody}>
           {tableData.map((row) => (
             <StyledTableRow key={row.id}>
              
@@ -66,18 +81,19 @@ export default function CustomizedTables({tableData,setTable,symbol}) {
                 <div className={classes.firstCellContainer}>
                   <span><img src={row.image} alt='crytpo_image' style={{ height: '50px', width: '50px' }} /> </span>
                     <div className={classes.firstCell}>
-                      <span style={{fontSize:'30px'}}>{row.symbol}</span><br/>
+                      <span style={{fontSize:'30px'}}>{row.symbol.toUpperCase()}</span><br/>
                       <span style={{ fontSize: '15px' }}>{row.name}</span>
                     </div>
                 </div>
               </StyledTableCell>
               <StyledTableCell align="right">{symbol}{" "}{row.current_price}</StyledTableCell>
               <StyledTableCell align="right" style={{color: change>0 ? 'green':'red'}}>{ row.price_change_percentage_24h.toFixed(2)}</StyledTableCell>
-              <StyledTableCell align="right">{ row.market_cap}</StyledTableCell>
+              <StyledTableCell align="right">{symbol}{" " }{ row.market_cap}</StyledTableCell>
               
-            </StyledTableRow>
-          ))}
-        </TableBody>
+             </StyledTableRow>
+           ))}
+            </TableBody>
+          </ThemeProvider>
       </Table>
     </TableContainer>
   );
