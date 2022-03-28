@@ -35,9 +35,9 @@ function Carousal() {
             
         },
         carousalContainer: {
-            width: '50vw',
+            width: '70vw',
             height: '50vh',
-            marginLeft: '330px',
+            marginLeft: '200px',
             marginTop:'30px'
             
         }
